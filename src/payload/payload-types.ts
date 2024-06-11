@@ -196,7 +196,8 @@ export interface Media {
  */
 export interface Category {
   id: number;
-  title?: string | null;
+  title: string;
+  media: number | Media;
   parent?: (number | null) | Category;
   breadcrumbs?:
     | {
