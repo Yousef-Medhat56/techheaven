@@ -13,9 +13,9 @@ export const Providers: React.FC<{
   return (
     <ThemeProvider>
       <AuthProvider>
-        {/* <FilterProvider> */}
+        <FilterProvider>
           <CartProvider>{children}</CartProvider>
-        {/* </FilterProvider> */}
+        </FilterProvider>
       </AuthProvider>
     </ThemeProvider>
   )
