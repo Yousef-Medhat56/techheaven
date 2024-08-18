@@ -3,13 +3,15 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { Order } from '../../../../../payload/payload-types'
-import { HR } from '../../../../_components/HR'
-import { Media } from '../../../../_components/Media'
-import { Price } from '../../../../_components/Price'
-import { formatDateTime } from '../../../../_utilities/formatDateTime'
-import { getMeUser } from '../../../../_utilities/getMeUser'
-import { mergeOpenGraph } from '../../../../_utilities/mergeOpenGraph'
+import { Order } from '../../../../payload/payload-types'
+import { Button } from '../../../_components/Button'
+import { Gutter } from '../../../_components/Gutter'
+import { HR } from '../../../_components/HR'
+import { Media } from '../../../_components/Media'
+import { Price } from '../../../_components/Price'
+import { formatDateTime } from '../../../_utilities/formatDateTime'
+import { getMeUser } from '../../../_utilities/getMeUser'
+import { mergeOpenGraph } from '../../../_utilities/mergeOpenGraph'
 
 import classes from './index.module.scss'
 
@@ -44,11 +46,11 @@ export default async function Order({ params: { id } }) {
   }
 
   return (
-    <div>
-      <h5>
+    <Gutter className={classes.orders}>
+      <h1>
         {`Order`}
-        <span className={classes.id}>{` ${order.id}`}</span>
-      </h5>
+        <span className={classes.id}>{`${order.id}`}</span>
+      </h1>
       <div className={classes.itemMeta}>
         <p>{`ID: ${order.id}`}</p>
         <p>{`Payment Intent: ${order.stripePaymentIntentID}`}</p>
@@ -61,8 +63,9 @@ export default async function Order({ params: { id } }) {
           }).format(order.total / 100)}
         </p>
       </div>
-
+      <HR />
       <div className={classes.order}>
+        <h4 className={classes.orderItems}>Items</h4>
         {order.items?.map((item, index) => {
           if (typeof item.product === 'object') {
             const {
@@ -70,6 +73,8 @@ export default async function Order({ params: { id } }) {
               product,
               product: { id, title, meta, stripeProductID },
             } = item
+
+            const isLast = index === (order?.items?.length || 0) - 1
 
             const metaImage = meta?.image
 
@@ -99,15 +104,16 @@ export default async function Order({ params: { id } }) {
                         {'.'}
                       </p>
                     )}
-                    <h6 className={classes.title}>
+                    <h5 className={classes.title}>
                       <Link href={`/products/${product.slug}`} className={classes.titleLink}>
                         {title}
                       </Link>
-                    </h6>
+                    </h5>
                     <p>{`Quantity: ${quantity}`}</p>
                     <Price product={product} button={false} quantity={quantity} />
                   </div>
                 </div>
+                {!isLast && <HR />}
               </Fragment>
             )
           }
@@ -115,8 +121,12 @@ export default async function Order({ params: { id } }) {
           return null
         })}
       </div>
-      <HR className={classes.hr} />
-    </div>
+      <HR />
+      <div className={classes.actions}>
+        <Button href="/orders" appearance="primary" label="See all orders" />
+        <Button href="/account" appearance="secondary" label="Go to account" />
+      </div>
+    </Gutter>
   )
 }
 
